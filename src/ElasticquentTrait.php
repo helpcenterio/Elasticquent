@@ -65,16 +65,6 @@ trait ElasticquentTrait
     }
 
     /**
-     * Get Type Name
-     *
-     * @return string
-     */
-    public function getTypeName()
-    {
-        return $this->getTable();
-    }
-
-    /**
      * Uses Timestamps In Index.
      */
     public function usesTimestampsInIndex()
@@ -369,8 +359,7 @@ trait ElasticquentTrait
     public function getBasicEsParams($getIdIfPossible = true, $limit = null, $offset = null)
     {
         $params = array(
-            'index' => $this->getIndexName(),
-            'type' => $this->getTypeName(),
+            'index' => $this->getIndexName()
         );
 
         if ($getIdIfPossible && $this->getKey()) {
@@ -456,7 +445,7 @@ trait ElasticquentTrait
             'properties' => $instance->getMappingProperties(),
         );
 
-        $mapping['body'][$instance->getTypeName()] = $params;
+        $mapping['body'] = $params;
 
         return $instance->getElasticSearchClient()->indices()->putMapping($mapping);
     }
@@ -531,7 +520,7 @@ trait ElasticquentTrait
 
         $mappingProperties = $instance->getMappingProperties();
         if (!is_null($mappingProperties)) {
-            $index['body']['mappings'][$instance->getTypeName()] = [
+            $index['body']['mappings'] = [
                 '_source' => array('enabled' => true),
                 'properties' => $mappingProperties,
             ];
